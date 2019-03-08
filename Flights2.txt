@@ -1,0 +1,30 @@
+1. Cantidad de registros de la tabla de vuelos:
+
+Select count(*) from flights;
+
+2. Retraso promedio de salida y llegada según el aeropuerto origen.
+
+Select Avg(ArrDelay) AS Arrival_Delays, Avg(DepDelay) AS Departure_Delays, origin from flights Group by origin; 
+
+3. Retraso promedio de llegada de los vuelos, por meses y según el aeropuerto origen. Además, quieren que los resultado se muestren de la siguiente forma (fíjate en el orden de las filas):
+	    LAX, 2000, 01, 10
+
+SELECT origin, colYear, colMonth, avg(arrDelay) from flights GROUP BY origin, colYear, colMonth order by origin;
+
+4. Retraso promedio de llegada de los vuelos, por meses y según el aeropuerto origen (misma consulta que antes y con el mismo orden). Pero además, ahora quieren que en vez del código del aeropuerto se muestra el nombre de la ciudad.
+		Los Ángeles, 2000, 01, retraso
+
+SELECT city, origin, colYear, colMonth, avg(ArrDelay) from flights Inner join usairports On (usairports.iata=flights.origin) Group by city, colYear, colMonth order by origin;
+ 
+5. Las compañías con más vuelos cancelados. Además, deben estar ordenadas de forma que las compañías con más cancelaciones aparezcan las primeras.
+
+select Description, sum(Cancelled) from flights left join carriers on UniqueCarrier = CarrierCode group by description order by sum(cancelled) Desc;
+
+6. El identificador de los 10 aviones que más distancia han recorrido haciendo vuelos.
+
+Select flightID, Distance from flights order by distance limit 10; 
+
+7. Compañías con su retraso promedio sólo de aquellas las que sus vuelos llegan a su destino con un retraso promedio mayor de 10 minutos.
+
+SELECT Description, AVG(arrDelay) AS Arrival_Delay FROM flights INNER JOIN carriers ON (flights.uniqueCarrier=carriers.CarrierCode)
+GROUP BY DESCRIPTION  having AVG(arrDelay)>10 ORDER BY AVG(arrDelay) DESC limit 10; 
